@@ -3,23 +3,48 @@
 import numpy as np
 import networkx as nx
 
-def generalized_similarity(graph, min_eps=0.01, max_iter=50):
+def generalized_similarity(graph, min_eps=0.01, max_iter=50, weight=None):
     """
     Calculate generalized similarities between nodes in a BIPARTITE 
-    graph, as described in Balázs Kovács, "A generalized model of 
-    relational similarity," Social Networks, 32(3), July 2010, pp. 197–211.
+    graph, as described in [1]
 
-    Raise a ValueError exception if the graph is not bipartite.
+    Parameters
+    ----------
+    G : graph
+       A NetworkX graph
 
-    Return two weighted graphs of similarities, attained precision, 
-    and the number of iterations.
+    min_eps : float, optional (default=0.01)
+       Minimum attained precision.
+
+    max_iter : int, optional (default=50)
+       Maximal number of iterations.
+    
+    weight : string or None, optional (default='weight')
+       The edge data key used to provide each value in the matrix.
+       If None, then each edge has weight 1.
+
+    Returns
+    -------
+    A tuple of two weighted graphs of similarities, actual attained 
+    precision, and actual number of iterations.
+
+    Notes
+    -----
+    Raises a ValueError exception if the graph is not bipartite.
+
+    References
+    ----------
+    .. [1] Balázs Kovács, "A generalized model of relational similarity," 
+           Social Networks, 32(3), July 2010, pp. 197–211.
     """
 
     if not nx.is_bipartite(graph):
         raise ValueError("Not a bipartite graph")
 
     s = nx.bipartite.sets(graph)
-    arcs = nx.bipartite.biadjacency_matrix(graph, s[0], s[1]).toarray()
+    
+    arcs = nx.bipartite.biadjacency_matrix(graph, s[0], s[1],
+                                           weight = weight).toarray()
 
     arcs0 = arcs - arcs.mean(axis=1)[:, np.newaxis]
     arcs1 = arcs.T - arcs.mean(axis=0)[:, np.newaxis]
