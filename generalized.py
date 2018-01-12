@@ -3,7 +3,7 @@
 import numpy as np
 import networkx as nx
 
-def generalized_similarity(graph, min_eps=0.01, max_iter=50, weight=None):
+def generalized_similarity(graph, min_eps=0.01, max_iter=50, weight="weight"):
     """
     Calculate generalized similarities between nodes in a BIPARTITE 
     graph, as described in [1]

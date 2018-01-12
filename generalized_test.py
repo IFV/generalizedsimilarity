@@ -20,5 +20,9 @@ def test_generalized_similarity():
     print("Women network:", len(women), "nodes")
     print("Least similar women:", 
           sorted(women.edges(data=True), key=lambda x: x[2]['weight'])[0][0:2])
+    with open("examples/women.graphml","wb") as ofile:
+        nx.write_graphml(women, ofile)
+    with open("examples/events.graphml","wb") as ofile:
+        nx.write_graphml(events, ofile)
 
 test_generalized_similarity()
